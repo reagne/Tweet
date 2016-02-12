@@ -134,6 +134,7 @@ class User {
         }
         return $ret;
     }
+    
     public function loadAllSendMessages(){
         $ret = [];
         // TODO: Finish this function. It should return table of all Messaged send by User (date DESC)

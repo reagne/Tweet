@@ -4,7 +4,7 @@ create table Tweets(
     id int AUTO_INCREMENT,
     user_id int NOT NULL,
     text varchar(140),
-    post_date date NOT NULL,
+    post_date datetime NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
@@ -13,8 +13,8 @@ create table Tweets(
 class Tweet {
     static private $connection = null;
 
-    static public function SetConnection(mysqli $newConncection){
-        Tweet::$connection = $newConncection;
+    static public function SetConnection(mysqli $newConnection){
+        Tweet::$connection = $newConnection;
     }
     static public function CreateTweet($newUser_Id, $newText){
         $sql = "INSERT INTO Tweets(user_id, text, post_date)
@@ -82,7 +82,7 @@ class Tweet {
             $this->text = $newText;
         }
     }
-    public function saveToDb(){  // umożliwiamy użytkownikowi zmianę tweeta
+    public function saveToDb(){  // umożliwiamy użytkownikowi zmianę tweeta??
         $sql = "UPDATE Tweets SET text='$this->text' WHERE id='$this->id'";
         $result = self::$connection->query($sql);
         if($result === TRUE){
@@ -92,9 +92,20 @@ class Tweet {
         }
     }
 
-    public function getAllComments(){
+    public function loadAllComments(){
         $ret = [];
-        // TODO: Finish this function. It should return table of all Comments linked to Tweet
+        $sql = "SELECT Comments.id, Comments.tweet_id, Comments.text, Comments.post_date, Users.name FROM Comments JOIN Users ON Comments.user_id=Users.id
+                WHERE Comments.tweet_id='$this->id' ORDER BY post_date DESC";
+        $result = Tweet::$connection->query($sql);
+
+        if($result !== FALSE){
+            if($result->num_rows > 0){
+                while($row = $result->fetch_assoc()){
+                    $comment = new Comment($row["id"], $row["name"], $row["tweet_id"], $row["text"], $row["post_date"]);
+                    $ret[] = $comment;
+                }
+            }
+        }
         return $ret;
     }
 }

@@ -21,6 +21,7 @@ if($userToShow !== FALSE){
         }
         echo("
         <form action='ShowUser.php' method='POST'>
+        <label>Dodaj Tweet'a:</label>
         <input type='text' name='tweet_text''>
         <input type='submit'>
         </form>
