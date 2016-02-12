@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
 }
 
 ?>
-
+<p>Zaloguj sie ponizej lub <a href="Register.php">Zarejestruj sie</a></p>
 <form action="Login.php" method="POST">
     <p><label>
             Podaj swoj e-mail:

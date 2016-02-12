@@ -7,7 +7,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         $_SESSION['userId'] = $user->getId();
         header("Location: ShowUser.php");
     } else {
-        echo("Zle dane rejestracji.<br>");
+        echo("Zle dane rejestracji. E-mail zajety.<br>");
     }
 }
 ?>

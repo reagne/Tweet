@@ -18,7 +18,7 @@ class User {
         User::$connection = $newConncection;
     }
     static public function RegisterUser($newName, $newMail, $password1, $password2, $newDescription){
-        if( $password1 !== $password2 ){
+        if($password1 !== $password2){
             return false;
         }
 
@@ -29,7 +29,7 @@ class User {
                 values ('$newName', '$newMail', '$hashPassword', '$newDescription')";
 
         $result = self::$connection->query($sql);
-        if( $result === true ){
+        if($result === true){
             $newUser = new User(self::$connection->insert_id, $newName, $newMail, $newDescription);
             return $newUser;
         }
@@ -40,12 +40,12 @@ class User {
         $sql = "SELECT * FROM Users WHERE mail LIKE '$mail'";
         $result = self::$connection->query($sql);
 
-        if( $result !== FALSE ){
-            if( $result->num_rows === 1 ){
+        if($result !== FALSE){
+            if($result->num_rows === 1){
                 $row = $result->fetch_assoc();
 
                 $isPasswordOk = password_verify($password, $row["password"]);
-                if( $isPasswordOk === TRUE ){
+                if($isPasswordOk === TRUE){
                     $user = new User($row["id"], $row["name"], $row["mail"], $row["description"]);
                     return $user;
                 }
@@ -57,8 +57,8 @@ class User {
         $sql = "SELECT * FROM Users WHERE id=$id";
         $result = User::$connection->query($sql);
 
-        if( $result !== FALSE ){
-            if( $result->num_rows === 1 ){
+        if($result !== FALSE){
+            if($result->num_rows === 1){
                 $row = $result->fetch_assoc();
                 $user = new User($row["id"], $row["name"], $row["mail"], $row["description"]);
                 return $user;
@@ -71,9 +71,9 @@ class User {
         $sql = "SELECT * FROM Users";
         $result = self::$connection->query($sql);
 
-        if( $result !== FALSE ){
-            if( $result->num_rows > 0 ){
-                while( $row = $result->fetch_assoc() ){
+        if($result !== FALSE){
+            if($result->num_rows > 0){
+                while($row = $result->fetch_assoc()){
                     $user = new User($row["id"], $row["name"], $row["mail"], $row["description"]);
                     $ret[] = $user;
                 }
@@ -92,25 +92,25 @@ class User {
          $this->name = $newName;
          $this->mail = $newMail;
          $this->setDescription($newDescription);
-     }
+    }
     public function getId(){
          return ($this->id);
-     }
+    }
     public function getName(){
          return ($this->name);
     }
     public function getMail(){
          return ($this->mail);
-     }
+    }
     public function getDescription(){
          return ($this->description);
-     }
+    }
     public function setDescription($newDescription){
          if(is_string($newDescription) === true){
              $this->description = $newDescription;
          }
-     }
-    public function saveToDb(){
+    }
+    public function saveToDb(){  // umożliwiamy użytkownikowi zmianę opisu
          $sql = "UPDATE Users SET description='$this->description' WHERE id='$this->id'";
          $result = self::$connection->query($sql);
          if($result === TRUE){
@@ -121,7 +121,17 @@ class User {
     }
     public function loadAllTweets(){
         $ret = [];
-        // TODO: Finish this function. It should return table of Tweets send by User (date DESC)
+        $sql = "SELECT * FROM Tweets WHERE user_id='$this->id' ORDER BY post_date DESC";
+        $result = self::$connection->query($sql);
+
+        if($result !== FALSE){
+            if($result->num_rows > 0){
+                while($row = $result->fetch_assoc()){
+                    $tweet = new tweet($row["id"], $row["user_id"], $row["text"], $row["post_date"]);
+                    $ret[] = $tweet;
+                }
+            }
+        }
         return $ret;
     }
     public function loadAllSendMessages(){
