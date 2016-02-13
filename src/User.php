@@ -134,15 +134,37 @@ class User {
         }
         return $ret;
     }
-    
+
     public function loadAllSendMessages(){
         $ret = [];
-        // TODO: Finish this function. It should return table of all Messaged send by User (date DESC)
+        $sql = "SELECT Messages.id, Messages.sender_id, Users.name, Messages.text, Messages.create_date, Messages.is_read FROM Messages JOIN Users ON Messages.receiver_id=Users.id
+                WHERE Messages.sender_id='$this->id' ORDER BY Messages.create_date DESC";
+        $result = self::$connection->query($sql);
+
+        if($result !== FALSE){
+            if($result->num_rows > 0){
+                while($row = $result->fetch_assoc()){
+                    $message = new message($row["id"], $row["sender_id"], $row["name"], $row["text"], $row["create_date"], $row["is_read"]);
+                    $ret[] = $message;
+                }
+            }
+        }
         return $ret;
     }
     public function loadAllReceiveMessages(){
         $ret = [];
-        // TODO: Finish this function. It should return table of all Messaged received by User (date DESC)
+        $sql = "SELECT Messages.id, Users.name, Messages.receiver_id, Messages.text, Messages.create_date, Messages.is_read, left(Messages.text, 30) AS short_text FROM Messages JOIN Users ON Messages.sender_id=Users.id
+                WHERE Messages.receiver_id='$this->id' ORDER BY Messages.create_date DESC";
+        $result = self::$connection->query($sql);
+
+        if($result !== FALSE){
+            if($result->num_rows > 0){
+                while($row = $result->fetch_assoc()){
+                    $message = new message($row["id"], $row["name"], $row["receiver_id"], $row["short_text"], $row["create_date"], $row["is_read"]);
+                    $ret[] = $message;
+                }
+            }
+        }
         return $ret;
     }
 

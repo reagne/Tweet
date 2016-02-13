@@ -6,6 +6,7 @@ require_once(dirname(__FILE__)."./config.php");
 require_once(dirname(__FILE__)."./User.php");
 require_once(dirname(__FILE__)."./Tweet.php");
 require_once(dirname(__FILE__)."./Comment.php");
+require_once(dirname(__FILE__)."./Message.php");
 
 
 $conn = new mysqli($dbHost, $dbUser, $dbPassword, $dbBaseName);
@@ -19,6 +20,7 @@ if($conn->connect_errno){
 User::SetConnection($conn);
 Tweet::SetConnection($conn);
 Comment::SetConnection($conn);
+Message::SetConnection($conn);
 
 /* Testy na klasie USER
 $user1 = User::RegisterUser("Jacek", "test@test.pl", "12345", "12345", "Opis Jacek");

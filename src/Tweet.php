@@ -27,19 +27,6 @@ class Tweet {
         }
         return false;
     }
-    static public function GetTweetById($id){
-        $sql = "SELECT * FROM Tweets WHERE id=$id";
-        $result = Tweet::$connection->query($sql);
-
-        if($result !== FALSE){
-            if($result->num_rows === 1){
-                $row = $result->fetch_assoc();
-                $tweet = new Tweet($row["id"], $row["user_id"], $row["text"], $row["post_date"]);
-                return $tweet;
-            }
-        }
-        return false;
-    }
     static public function ShowTweet($id){
         $sql = "SELECT Tweets.id, Tweets.text, Tweets.post_date, Users.name FROM Tweets JOIN Users ON Tweets.user_id=Users.id WHERE Tweets.id='$id'";
         $result = self::$connection->query($sql);
@@ -82,16 +69,6 @@ class Tweet {
             $this->text = $newText;
         }
     }
-    public function saveToDb(){  // umożliwiamy użytkownikowi zmianę tweeta??
-        $sql = "UPDATE Tweets SET text='$this->text' WHERE id='$this->id'";
-        $result = self::$connection->query($sql);
-        if($result === TRUE){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public function loadAllComments(){
         $ret = [];
         $sql = "SELECT Comments.id, Comments.tweet_id, Comments.text, Comments.post_date, Users.name FROM Comments JOIN Users ON Comments.user_id=Users.id
@@ -107,5 +84,19 @@ class Tweet {
             }
         }
         return $ret;
+    }
+    public function numberOfComments(){
+        $number = 0;
+        $sql = "SELECT * FROM Comments WHERE Comments.tweet_id='$this->id'";
+        $result = Tweet::$connection->query($sql);
+
+        if($result !== FALSE){
+            if($result->num_rows > 0){
+                while($row = $result->fetch_assoc()){
+                    $number++;
+                }
+            }
+        }
+        return $number;
     }
 }
