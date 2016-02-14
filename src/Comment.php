@@ -34,19 +34,6 @@ class Comment {
         }
         return false;
     }
-    static public function GetCommentById($id){
-        $sql = "SELECT * FROM Comments WHERE id=$id";
-        $result = self::$connection->query($sql);
-        if($result !== FALSE){
-            if($result->num_rows === 1){
-                $row = $result->fetch_assoc();
-                $comment = new Comment($row["id"], $row["user_id"], $row["tweet_id"], $row["text"], $row["post_date"]);
-                return $comment;
-            }
-        }
-        return false;
-    }
-
 
     private $id;
     private $user_id;
@@ -81,14 +68,4 @@ class Comment {
             $this->text = $newText;
         }
     }
-    public function saveToDb(){  // umożliwiamy użytkownikowi zmianę komentarza??
-        $sql = "UPDATE Comments SET text='$this->text' WHERE id='$this->id'";
-        $result = self::$connection->query($sql);
-        if($result === TRUE){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }
