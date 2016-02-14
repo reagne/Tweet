@@ -1,6 +1,10 @@
 <?php
 require_once("./src/connection.php");
 
+if(isset($_SESSION['userId'])){
+    header("Location: ShowUser.php");
+}
+
 if($_SERVER['REQUEST_METHOD'] === "POST"){
     $user = User::RegisterUser($_POST['name'], $_POST['mail'], $_POST['password1'], $_POST['password2'], $_POST['description']);
     if($user !== FALSE){
@@ -11,7 +15,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     }
 }
 ?>
-
+<p>Zarejestruj sie ponizej lub <a href="Login.php">Zaloguj sie</a>, jesli posiadasz juz konto</p>
 <form action="Register.php" method="POST">
     <p><label>
         Email:

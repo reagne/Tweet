@@ -1,6 +1,14 @@
 <?php
 require_once ("./src/connection.php");
 
+if(isset($_SESSION['userId'])){
+    echo("
+    <a href='ShowUser.php'>Home</a> | <a href='Logout.php'>Wyloguj</a>
+    <br>");
+} else {
+    header("Location: Login.php");
+}
+
 if(isset($_GET['userId'])){
     $userId = $_GET['userId'];
 } else {
@@ -10,10 +18,9 @@ if(isset($_GET['userId'])){
 $userToEdit = User::GetUserById($userId);
 
 if($userToEdit !== FALSE){
+    if($userToEdit->getId() === $_SESSION['userId']){
     echo("Twoj obecny opis: {$userToEdit->getDescription()}<br>");
     echo("Zmien: <br>");
-    if($userToEdit->getId() === $_SESSION['userId']){
-
         echo("
         <form action=EditUser.php method='POST'>
         <input type='text' name='new_description''>
@@ -31,7 +38,6 @@ if($userToEdit !== FALSE){
             }
         }
     }
-
 } else {
     echo("Nie ma takiego uzytkownika");
 }

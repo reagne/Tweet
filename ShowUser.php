@@ -1,6 +1,14 @@
 <?php
 require_once ("./src/connection.php");
 
+if(isset($_SESSION['userId'])){
+    echo("
+    <a href='ShowUser.php'>Home</a> | <a href='ShowAllUsers.php'>Znajdz uzytkownika</a> | <a href='Logout.php'>Wyloguj</a> | <a href='EditUser.php'>Edytuj swoje dane</a>
+    <br><br>");
+} else {
+    header("Location: Login.php");
+}
+
 if(isset($_GET['userId'])){
     $userId = $_GET['userId'];
 } else {
@@ -10,12 +18,15 @@ if(isset($_GET['userId'])){
 $userToShow = User::GetUserById($userId);
 
 if($userToShow !== FALSE){
-    echo("<h1>{$userToShow->getName()}</h1>");
+    if($userToShow->getId() !== $_SESSION['userId']){
+        echo("<h1>{$userToShow->getName()}</h1>");
+    }
 
     if($userToShow->getId() === $_SESSION['userId']){
+        echo("<h1>Witaj {$userToShow->getName()}</h1>");
         echo("
         <a href='AllMessages.php?userId={$userToShow->getId()}'>Twoje wiadomosci</a>
-        ");
+        <br><br>");
 
         if($_SERVER['REQUEST_METHOD'] === "POST"){
             $tweet = Tweet::CreateTweet($_SESSION['userId'], $_POST['tweet_text']);

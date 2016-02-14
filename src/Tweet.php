@@ -22,7 +22,13 @@ class Tweet {
 
         $result = self::$connection->query($sql);
         if($result === true){
-            $newTweet = new Tweet(self::$connection->insert_id, $newUser_Id, $newText);
+            $newTweetId = self::$connection->insert_id;
+
+            $sql2 = "SELECT post_date FROM Tweets WHERE id=$newTweetId";
+            $result2 = self::$connection->query($sql2);
+            $newDate = $result2;
+
+            $newTweet = new Tweet($newTweetId, $newUser_Id, $newText, $newDate);
             return $newTweet;
         }
         return false;

@@ -23,7 +23,13 @@ class Comment {
                 values ('$newUser_Id', '$newTweet_Id', '$newText', now())";
         $result = self::$connection->query($sql);
         if($result !== FALSE){
-            $newComment = new Comment(self::$connection->insert_id, $newUser_Id, $newTweet_Id, $newText);
+            $newCommentId = self::$connection->insert_id;
+
+            $sql2 = "SELECT post_date FROM Tweets WHERE id=$newCommentId";
+            $result2 = self::$connection->query($sql2);
+            $newDate = $result2;
+
+            $newComment = new Comment($newCommentId, $newUser_Id, $newTweet_Id, $newText, $newDate);
             return $newComment;
         }
         return false;

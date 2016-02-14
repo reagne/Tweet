@@ -25,7 +25,14 @@ class Message {
 
         $result = self::$connection->query($sql);
         if($result === true){
-            $newMessage = new Message(self::$connection->insert_id, $newSender, $newReceiver, $newText);
+            $newMessageId = self::$connection->insert_id;
+
+            $sql2 = "SELECT create_date FROM Tweets WHERE id=$newMessageId";
+            $result2 = self::$connection->query($sql2);
+            $newDate = $result2;
+            $newStatus = "1";
+
+            $newMessage = new Message($newMessageId, $newSender, $newReceiver, $newText, $newDate, $newStatus);
             return $newMessage;
         }
         return false;

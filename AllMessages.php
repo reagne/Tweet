@@ -1,6 +1,14 @@
 <?php
 require_once ("./src/connection.php");
 
+if(isset($_SESSION['userId'])){
+    echo("
+    <a href='ShowUser.php'>Home</a> | <a href='ShowAllUsers.php'>Znajdz uzytkownika</a> |<a href='Logout.php'>Wyloguj</a> | <a href='EditUser.php'>Edytuj swoje dane</a>
+    <br>");
+} else {
+    header("Location: Login.php");
+}
+
 if(isset($_GET['userId'])){
     $userId = $_GET['userId'];
 } else {
