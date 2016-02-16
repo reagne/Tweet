@@ -19,16 +19,12 @@ class Comment {
         Comment::$connection = $newConnection;
     }
     static public function CreateComment($newUser_Id, $newTweet_Id, $newText){
+        $newDate = date("Y-m-d H:i:s");
         $sql = "INSERT INTO Comments(user_id, tweet_id, text, post_date)
-                values ('$newUser_Id', '$newTweet_Id', '$newText', now())";
+                values ('$newUser_Id', '$newTweet_Id', '$newText', '$newDate')";
         $result = self::$connection->query($sql);
         if($result !== FALSE){
             $newCommentId = self::$connection->insert_id;
-
-            $sql2 = "SELECT post_date FROM Tweets WHERE id=$newCommentId";
-            $result2 = self::$connection->query($sql2);
-            $newDate = $result2;
-
             $newComment = new Comment($newCommentId, $newUser_Id, $newTweet_Id, $newText, $newDate);
             return $newComment;
         }

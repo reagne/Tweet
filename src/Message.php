@@ -20,18 +20,14 @@ class Message {
         self::$connection = $newConncection;
     }
     static public function CreateMessage($newSender, $newReceiver, $newText){
+        $newDate = date("Y-m-d H:i:s");
         $sql = "INSERT INTO Messages(sender_id, receiver_id, text, create_date)
-                values ('$newSender','$newReceiver','$newText', now())";
+                values ('$newSender','$newReceiver','$newText', '$newDate')";
 
         $result = self::$connection->query($sql);
-        if($result === true){
+        if($result !== FALSE){
             $newMessageId = self::$connection->insert_id;
-
-            $sql2 = "SELECT create_date FROM Tweets WHERE id=$newMessageId";
-            $result2 = self::$connection->query($sql2);
-            $newDate = $result2;
             $newStatus = "1";
-
             $newMessage = new Message($newMessageId, $newSender, $newReceiver, $newText, $newDate, $newStatus);
             return $newMessage;
         }
